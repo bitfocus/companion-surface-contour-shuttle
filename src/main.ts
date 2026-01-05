@@ -7,7 +7,7 @@ import {
 	type SurfaceContext,
 	type SurfacePlugin,
 } from '@companion-surface/base'
-import { isAShuttleDevice, ProductModelId, setupShuttle } from 'shuttle-node'
+import { isAShuttleDevice, ProductModelId, setupShuttle, PRODUCTS } from 'shuttle-node'
 import { ContourShuttleWrapper } from './instance.js'
 import { createSurfaceSchema } from './surface-schema.js'
 import {
@@ -18,6 +18,21 @@ import {
 } from './models.js'
 
 const logger = createModuleLogger('Plugin')
+
+function matchProduct(device: HIDDevice): ProductModelId | undefined {
+	for (const product of Object.values(PRODUCTS)) {
+		if (product.productId === device.productId && product.vendorId === device.vendorId) {
+			if (product.productModelId === ProductModelId.ShuttleProV1a) {
+				// Treat ShuttleProV1a as ShuttleProV1 for our purposes
+				return ProductModelId.ShuttleProV1
+			}
+
+			return product.productModelId
+		}
+	}
+
+	return undefined
+}
 
 const ContourShuttlePlugin: SurfacePlugin<HIDDevice> = {
 	init: async (): Promise<void> => {
@@ -31,10 +46,14 @@ const ContourShuttlePlugin: SurfacePlugin<HIDDevice> = {
 		const isShuttle = isAShuttleDevice(device)
 		if (!isShuttle) return null
 
+		const modelId = matchProduct(device)
+		if (!modelId) return null
+
 		logger.debug(`Checked HID device: ${device.manufacturer} ${device.product}`)
 
 		return {
-			surfaceId: `contourshuttle:${device.serialNumber}`, // Use the faked serial number
+			surfaceId: `contourshuttle:${modelId}`,
+			surfaceIdIsNotUnique: true,
 			description: `${device.manufacturer} ${device.product || 'Contour Shuttle'}`.trim(),
 			pluginInfo: device,
 		}
