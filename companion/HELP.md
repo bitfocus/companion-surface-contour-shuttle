@@ -15,7 +15,10 @@ The button layout closely matches the device, with the following addition. For t
 
 > In either case, **_rotate-left_** is emitted when the jog is to the left of zero (the neutral position) and **_rotate-right_** is sent when the jog is to the right of zero, regardless of the physical rotation direction.
 
-![Contour Shuttle template](images/contour-shuttle.png?raw=true 'Contour Shuttle template')
+> The Shuttle Xpress only has 5 buttons and it's jog is mapped to **_row1/col1_** and scroll + repeat are at **_row1/col2_** **_row1/col3_**
+
+![Contour Shuttle template](images/contour-shuttle-pro.png?raw=true 'Contour Shuttle template')
+![Contour Shuttle template](images/contour-shuttle-xpress.png?raw=true 'Contour Shuttle template')
 
 **Download a [Contour Shuttle template](assets/contour-shuttle-template.companionconfig) here.** (The template includes the variables described in the next section.)
 
